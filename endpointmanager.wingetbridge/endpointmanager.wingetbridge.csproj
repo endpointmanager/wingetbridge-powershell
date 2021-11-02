@@ -88,7 +88,6 @@
   <ItemGroup>
     <Compile Include="AsyncHelper.cs" />
     <Compile Include="FileDownloader.cs" />
-    <Compile Include="LinqRecursiveHelper.cs" />
     <Compile Include="Models.cs" />
     <Compile Include="PowerShellAsync.cs" />
     <Compile Include="WingetBridge.cs" />
