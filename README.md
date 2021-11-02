@@ -6,7 +6,7 @@ This repository contains a PowerShell module that completes the ability to autom
 # Understand the goals of this project
 
 I hope that an official powershell module (maintained by Microsoft) will be available soon, which can be used to accomplish the main goals of this project:
-* Automatically provide and maintain software in software deployment tools (like [Microsoft Endpoint Manager Configuration Manager](https://docs.microsoft.com/en-us/mem/configmgr/))
+* Automatically provide and maintain packages in software deployment tools (like [Microsoft Endpoint Manager Configuration Manager](https://docs.microsoft.com/en-us/mem/configmgr/))
 * Automatically download and update installers into [MDT](https://docs.microsoft.com/en-us/windows/deployment/deploy-windows-mdt/get-started-with-the-microsoft-deployment-toolkit) (Which will be used for [Image Factory](https://deploymentbunny.com/2018/10/19/image-factory-4-0-is-available-for-download/) in my case) 
 
 Meanwhile, I built a powershell module (which is Powershell 5 compatible on purpose) to prepare the required powershell-scripts to automatically maintain packages in Microsoft Endpoint Manager and MDT.
