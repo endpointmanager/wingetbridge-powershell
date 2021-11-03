@@ -1,4 +1,5 @@
 ![Image of wingetbridge-powershell](https://repository-images.githubusercontent.com/423620656/cf98f351-dfaa-4d5d-bb2b-363633e639b6)
+[![Twitter URL](https://img.shields.io/twitter/url/https/twitter.com/PaulJezek.svg?style=social&label=Follow%20%40Paul%20Jezek)](https://twitter.com/PaulJezek)
 # wingetbridge-powershell
 
 This repository contains a PowerShell module that completes the ability to automatically provide and maintain applications in your software deployment tool by using the Windows Package Manager Repository.
@@ -20,10 +21,7 @@ Currently, there are no plans to implement more features, because I think the of
 
 ## Risk of damage :warning:
 
-I highly recommend not using WingetBridge in a production environment without validating the downloaded installers before you deploy it. (e.g. by validating the certificate of a signed installer)  
-  
-WingetBridge is provided "as it is", and there is no warranty that you always get what you're searching for.
-
+I highly recommend not using WingetBridge in a production environment without validating the downloaded installers before you deploy it. (e.g. by validating the certificate of a signed installer)
 
 ## Current Version
 v1.0.0.0
@@ -56,8 +54,9 @@ Downloads a specified package installer.
 ```ps
 (Start-WingetSearch -SearchByMoniker "vlc" | Get-WingetManifest).Installers | Start-WingetInstallerDownload -AcceptAgreements
 ```  
-> Search the winget repository by moniker (e.g. "vlc") and download all installers provided by the manifest (of "vlc")  
-When using [-AcceptAgreements] you agree any licenses required to download packages.
+> Search the winget repository by moniker "vlc" and download all installers provided in the manifest  
+When using [-AcceptAgreements] you agree any licenses required to download packages.  
+You can specify a target directory with [-TargetDirectory], otherwise the download will be stored in the current directory.
 
 ### Update-WingetBridgeCache
 Updates the cache (local database) for WingetBridge.  
