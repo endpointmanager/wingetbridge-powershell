@@ -21,6 +21,7 @@ Currently, there are no plans to implement more features, because I think the of
 ## Risk of damage :warning:
 
 I highly recommend not using WingetBridge in a production environment without validating the downloaded installers before you deploy it. (e.g. by validating the certificate of a signed installer)  
+  
 WingetBridge is provided "as it is", and there is no warranty that you always get what you're searching for.
 
 
