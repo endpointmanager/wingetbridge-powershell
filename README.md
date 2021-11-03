@@ -20,10 +20,9 @@ Currently, there are no plans to implement more features, because I think the of
 
 ## Risk of damage :warning:
 
-I highly recommend not using this powershell-module in a production environment.  
-If you decide to do so anyways, test it in detail before using it.  
-
+I highly recommend not using WingetBridge in a production environment without validating the downloaded installers before you deploy it. (e.g. by validating the certificate of a signed installer)  
 WingetBridge is provided "as it is", and there is no warranty that you always get what you're searching for.
+
 
 ## Current Version
 v1.0.0.0
@@ -70,7 +69,7 @@ Update-WingetBridgeCache -Force
 
 ### Setup
 #### Online
-* The **wingetbridge-PowerShell module** is now listed on **PowerShell Gallery**, therefore it can be installed by using:  
+* The **wingetbridge-PowerShell module** is now listed on **PowerShell Gallery**, therefore it can be installed with:  
     ```ps
     Install-Module endpointmanager.wingetbridge
     ```
