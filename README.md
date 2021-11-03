@@ -55,6 +55,7 @@ Downloads a specified package installer.
 (Start-WingetSearch -SearchByMoniker "vlc" | Get-WingetManifest).Installers | Start-WingetInstallerDownload -AcceptAgreements
 ```  
 > Search the winget repository by moniker "vlc" and download all installers provided in the manifest  
+
 When using [-AcceptAgreements] you agree any licenses required to download packages.  
 You can specify a target directory with [-TargetDirectory], otherwise the download will be stored in the current directory.
 
