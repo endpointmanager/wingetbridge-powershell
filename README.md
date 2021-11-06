@@ -1,5 +1,5 @@
 ![Image of wingetbridge-powershell](https://repository-images.githubusercontent.com/423620656/cf98f351-dfaa-4d5d-bb2b-363633e639b6)
-[![Twitter URL](https://img.shields.io/twitter/url/https/twitter.com/PaulJezek.svg?style=social&label=Follow%20%40Paul%20Jezek)](https://twitter.com/PaulJezek)
+[![Twitter URL](https://img.shields.io/twitter/url/https/twitter.com/PaulJezek.svg?style=social&label=Follow%20%40Paul%20Jezek%20%23wingetbridge)](https://twitter.com/PaulJezek)
 # wingetbridge-powershell
 
 This repository contains a PowerShell module that completes the ability to automatically provide and maintain applications in your software deployment tool by using the Windows Package Manager Repository.
