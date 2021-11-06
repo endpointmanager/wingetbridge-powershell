@@ -97,6 +97,6 @@ WingetBridge only exists because of the beautiful and hard work of the developer
 
 ## License (does not include 3rd party software, which can be downloaded using this module)
 
-See [LICENSE](LICENSE.md) file for licence rights and limitations (MIT)
+See [LICENSE](LICENSE) file for licence rights and limitations (MIT)
 
 The author of this module is not responsible for, nor does it grant any licenses to, third-party packages.
