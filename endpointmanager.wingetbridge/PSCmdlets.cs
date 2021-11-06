@@ -13,6 +13,7 @@ using System.IO;
 using ByteSizeLib;
 using System.Security.Cryptography.X509Certificates;
 using System.Security.Cryptography;
+using System.Drawing;
 
 namespace endpointmanager.wingetbridge
 {
@@ -516,6 +517,43 @@ namespace endpointmanager.wingetbridge
                 cacheinfo.PackageVersions = WingetBridge.GetPackageVersionsCount();
 
                 WriteObject(cacheinfo);
+            }
+        }
+    }
+
+    [Cmdlet("Save", "WingetBridgeAppIcon")]
+    public class SaveWingetBridgeAppIcon : PSCmdlet
+    {
+        [Parameter(Mandatory = true)]
+        public string SetupFile
+        {
+            get { return setupFile; }
+            set { setupFile = value; }
+        }
+        private string setupFile;
+
+        [Parameter(Mandatory = true)]
+        public string TargetIconFile
+        {
+            get { return targetIconFile; }
+            set { targetIconFile = value; }
+        }
+        private string targetIconFile;
+
+        protected override void ProcessRecord()
+        {
+            if (File.Exists(setupFile))
+            {
+                using (var fileStream = new FileStream(TargetIconFile, FileMode.Create, FileAccess.Write))
+                {
+                    Icon appicon = IconExtractor.ExtractIconFromExecutable(setupFile);
+                    appicon.Save(fileStream);
+                    Host.UI.WriteLine(ConsoleColor.Magenta, Host.UI.RawUI.BackgroundColor, "Successfully saved AppIcon to [" + targetIconFile + "]");
+                }
+            }
+            else
+            {
+                throw new ArgumentException("You must specifiy an executable [-SetupFile] that exists. (File [" + setupFile + "] not found)");
             }
         }
     }
