@@ -68,6 +68,14 @@ Update-WingetBridgeCache -Force
 ```  
 > Rebuild the local cache WingetBridge uses.
 
+### Save-WingetBridgeAppIcon
+Saves the default icon (supports hi-res icons up to 256x256px) that is contained in the specified executable [-SetupFile], to the specified [-TargetIconFile].
+
+```ps
+Save-WingetBridgeAppIcon -SetupFile "C:\Windows\Explorer.exe" -TargetIconFile "explorer.ico"
+```  
+
+
 ### Setup
 #### Online
 * The **wingetbridge-PowerShell module** is now listed on **PowerShell Gallery**, therefore it can be installed with:  
