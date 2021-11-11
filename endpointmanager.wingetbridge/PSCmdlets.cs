@@ -206,9 +206,9 @@ namespace endpointmanager.wingetbridge
                 }
                 if (Verbose.IsPresent)
                 {
-                    Host.UI.WriteLine(ConsoleColor.Magenta, Host.UI.RawUI.BackgroundColor, "Download Manifest [" + WingetBridge.WingetCacheUrl + packageVersion.YamlUri + "]");
+                    Host.UI.WriteLine(ConsoleColor.Magenta, Host.UI.RawUI.BackgroundColor, "Download Manifest [" + WingetBridge.WingetCacheUrl + packageVersion.YamlUri.Replace("\\", "/") + "]");
                 }
-                WriteObject(AsyncHelper.RunSync(() => WingetBridge.GetManifestAsync(packageVersion.YamlUri, UseDefaultWebProxy.IsPresent)));
+                WriteObject(AsyncHelper.RunSync(() => WingetBridge.GetManifestAsync(packageVersion.YamlUri.Replace("\\","/") , UseDefaultWebProxy.IsPresent)));
             }
         }
     }
@@ -234,8 +234,25 @@ namespace endpointmanager.wingetbridge
         private string targetDirectory;
 
         [Parameter(Mandatory = false)]
+        public String CustomUserAgent
+        {
+            get { return customUserAgent; }
+            set { customUserAgent = value; }
+        }
+        private string customUserAgent;
+
+        [Parameter(Mandatory = false)]
+        public int? Timeout
+        {
+            get { return timeout; }
+            set { timeout = value; }
+        }
+        private int? timeout = null;
+
+        [Parameter(Mandatory = false)]
         public SwitchParameter UseDefaultWebProxy
         { get; set; } = true;
+
         [Parameter(Mandatory = false)]
         public SwitchParameter Force //Overwrites existing files
         { get; set; } = false;
@@ -290,6 +307,14 @@ namespace endpointmanager.wingetbridge
                     IWebProxy defaultWebProxy = WebRequest.DefaultWebProxy;
                     defaultWebProxy.Credentials = CredentialCache.DefaultCredentials;
                     downloader.Proxy = defaultWebProxy;
+                }
+                if ((CustomUserAgent != null) && (CustomUserAgent != ""))
+                {
+                    downloader.UserAgent = CustomUserAgent;
+                }
+                if (Timeout != null)
+                {
+                    downloader.Timeout = Timeout*1000; //specified Timeout multiplied by (milliseconds per second)   
                 }
                 downloader.DeleteOnError = true;
                 downloader.OverrideExisting = Force.IsPresent;
@@ -457,7 +482,7 @@ namespace endpointmanager.wingetbridge
 
                     client.DownloadFileCompleted += new AsyncCompletedEventHandler(DownloadFileCallback);
                     client.DownloadProgressChanged += new DownloadProgressChangedEventHandler(DownloadProgressChanged);
-
+                    client.Headers["User-Agent"] = WingetBridge.DefaultUserAgent;
                     try
                     {
                         await client.DownloadFileTaskAsync(new System.Uri(WingetBridge.MSIXSource), WingetBridge.MSIXTempSource);
@@ -525,14 +550,14 @@ namespace endpointmanager.wingetbridge
     public class SaveWingetBridgeAppIcon : PSCmdlet
     {
         [Parameter(Mandatory = true)]
-        public string SetupFile
+        public string SourceFile
         {
-            get { return setupFile; }
-            set { setupFile = value; }
+            get { return sourceFile; }
+            set { sourceFile = value; }
         }
-        private string setupFile;
+        private string sourceFile;
 
-        [Parameter(Mandatory = true)]
+        [Parameter(Mandatory = false)]
         public string TargetIconFile
         {
             get { return targetIconFile; }
@@ -540,20 +565,56 @@ namespace endpointmanager.wingetbridge
         }
         private string targetIconFile;
 
+        [Parameter(Mandatory = false)]
+        public SwitchParameter ValidateOnly
+        { get; set; } = false;
+
         protected override void ProcessRecord()
         {
-            if (File.Exists(setupFile))
+            if (File.Exists(sourceFile))
             {
-                using (var fileStream = new FileStream(TargetIconFile, FileMode.Create, FileAccess.Write))
+                Icon appicon = null;
+                if (sourceFile.ToLower().EndsWith(".ico"))
                 {
-                    Icon appicon = IconExtractor.ExtractIconFromExecutable(setupFile);
-                    appicon.Save(fileStream);
-                    Host.UI.WriteLine(ConsoleColor.Magenta, Host.UI.RawUI.BackgroundColor, "Successfully saved AppIcon to [" + targetIconFile + "]");
+                    appicon = new System.Drawing.Icon(sourceFile);
+                }
+                else
+                {
+                    appicon = IconExtractor.ExtractIconFromExecutable(sourceFile);
+                }
+                if (appicon != null)
+                {
+                    List<IconExtractor.IconResolution> resolutions = IconExtractor.GetIconInformation(appicon);
+                    if (!ValidateOnly.IsPresent)
+                    {
+                        if ((targetIconFile == "") || (targetIconFile == null))
+                        {
+                            throw new FileNotFoundException("You must specifiy a destination with [-TargetIconFile]");
+                        }
+                        if (File.Exists(TargetIconFile)) { File.Delete(TargetIconFile); }
+                        using (var fileStream = new FileStream(TargetIconFile, FileMode.Create, FileAccess.Write))
+                        {
+                            appicon.Save(fileStream);
+                        }
+                        Host.UI.WriteLine(ConsoleColor.Magenta, Host.UI.RawUI.BackgroundColor, "Successfully saved AppIcon to [" + targetIconFile + "]");
+                    }
+                    WriteObject(resolutions);
+                }
+                else
+                {
+                    if (!ValidateOnly.IsPresent)
+                    {
+                        throw new ArgumentException("You must specifiy an icon-file (*.ico) or an executable that contains an icon!");
+                    }
+                    else
+                    {
+                        Host.UI.WriteLine(ConsoleColor.Gray, Host.UI.RawUI.BackgroundColor, "The specified executable does not contain an icon.");
+                    }
                 }
             }
             else
             {
-                throw new ArgumentException("You must specifiy an executable [-SetupFile] that exists. (File [" + setupFile + "] not found)");
+                throw new ArgumentException("You must specifiy an executable [-SetupFile] that exists. (File [" + sourceFile + "] not found)");
             }
         }
     }

@@ -44,6 +44,8 @@ namespace endpointmanager.wingetbridge
 
         public event DownloadProgressHandler ProgressChanged;
         private IWebProxy proxy = null;
+        private string useragent;
+        private int? timeout = 0;
         private bool deleteOnError = false;
         private bool overrideExisting = false;
 
@@ -55,6 +57,18 @@ namespace endpointmanager.wingetbridge
         {
             get { return proxy; }
             set { proxy = value; }
+        }
+
+        public string UserAgent
+        {
+            get { return useragent; }
+            set { useragent = value; }
+        }
+
+        public int? Timeout
+        {
+            get { return timeout; }
+            set { timeout = value; }
         }
 
         public bool DeleteOnError
@@ -106,7 +120,7 @@ namespace endpointmanager.wingetbridge
             try
             {
                 // get download details               
-                data = DownloadData.Create(url, destFolder, this.proxy, this.overrideExisting);
+                data = DownloadData.Create(url, destFolder, this.proxy, this.useragent, this.timeout, this.overrideExisting);
                 summary.AlreadyExisted = data.AlreadyExisted;
                 // Find out the name of the file that the web server gave us.
                 string destFileName = Path.GetFileName(data.Response.ResponseUri.ToString());
@@ -119,6 +133,10 @@ namespace endpointmanager.wingetbridge
                     destFileName = contentDisposition.FileName;
                 }
 
+                if (string.IsNullOrEmpty(destFileName)) //if still empty, fallback to Filename within the given URL
+                {
+                    destFileName = System.IO.Path.GetFileName(url);
+                }
                 // The place we're downloading to (not from) must not be a URI,
                 // because Path and File don't handle them...
 
@@ -350,17 +368,27 @@ namespace endpointmanager.wingetbridge
         private bool alreadyexisted;
         private long start;
         private IWebProxy proxy = null;
+        private string useragent = "";
+        private int? timeout = null;
 
         public static DownloadData Create(string url, string destFolder, bool overrideExisting)
         {
-            return Create(url, destFolder, null, overrideExisting);
+            return Create(url, destFolder, null, "", null, overrideExisting);
         }
 
-        public static DownloadData Create(string url, string destFolder, IWebProxy proxy, bool overrideExisting)
+        public static DownloadData Create(string url, string destFolder, IWebProxy proxy, string UserAgent, int? Timeout, bool overrideExisting)
         {
             // This is what we will return
             DownloadData downloadData = new DownloadData();
             downloadData.proxy = proxy;
+
+            if ((UserAgent!= null) && (UserAgent != ""))
+            { downloadData.useragent = UserAgent; }
+            else { downloadData.useragent = WingetBridge.DefaultUserAgent; }
+
+            if ((Timeout != null) && (Timeout != 0))
+            { downloadData.timeout = Timeout; }
+            else { downloadData.timeout = WingetBridge.DefaultTimeout; }
 
             long urlSize = downloadData.GetFileSize(url);
             downloadData.size = urlSize;
@@ -387,6 +415,10 @@ namespace endpointmanager.wingetbridge
             {
                 ContentDisposition contentDisposition = new ContentDisposition(cpString);
                 fileName = contentDisposition.FileName;
+            }
+            if (string.IsNullOrEmpty(fileName)) //if still empty, fallback to Filename within the given URL
+            {
+                fileName = System.IO.Path.GetFileName(url);
             }
             String downloadTo = Path.Combine(destFolder, fileName);
             if (File.Exists(downloadTo)) { downloadData.alreadyexisted = true;  }
@@ -515,9 +547,15 @@ namespace endpointmanager.wingetbridge
             if (request is HttpWebRequest)
             {
                 request.Credentials = CredentialCache.DefaultCredentials;
-                ((HttpWebRequest)request).ReadWriteTimeout = 60000;
-                ((HttpWebRequest)request).Timeout = 60000;
-                Uri result = request.Proxy.GetProxy(new Uri("http://www.google.com"));
+                int _timeout = WingetBridge.DefaultTimeout;
+                if (this.timeout != null)
+                { _timeout = this.timeout.GetValueOrDefault(WingetBridge.DefaultTimeout); }
+                ((HttpWebRequest)request).ReadWriteTimeout = _timeout;
+                ((HttpWebRequest)request).Timeout = _timeout;
+                if ((this.useragent != null) && (this.useragent != ""))
+                { ((HttpWebRequest)request).UserAgent = this.useragent; }
+                else { ((HttpWebRequest)request).UserAgent = WingetBridge.DefaultUserAgent; }
+                Uri result = request.Proxy.GetProxy(new Uri("http://www.microsoft.com")); //Get Proxy from Internet-Zone
             }
 
             if (this.proxy != null)

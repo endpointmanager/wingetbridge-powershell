@@ -83,32 +83,41 @@
 <command:noun>WingetBridgeAppIcon</command:noun>
 </command:details>
 <maml:description>
-<maml:para>Saves the default application icon (multi-resolution format up to 256x256px) that is contained in the specified [-SetupFile], to the specified [-TargetIconFile].</maml:para>
+<maml:para>Saves the default application icon (multi-resolution format up to 256x256px) that is contained in the specified [-SourceFile], to the specified [-TargetIconFile].</maml:para>
 </maml:description>
 <command:syntax>
 <command:syntaxItem>
 <maml:name>Save-WingetBridgeAppIcon</maml:name>
 <command:parameter required="true" position="named" >
-<maml:name>SetupFile</maml:name>
+<maml:name>SourceFile</maml:name>
 <command:parameterValue required="true">String</command:parameterValue>
 </command:parameter>
-<command:parameter required="true" position="named" >
+<command:parameter required="false" position="named" >
 <maml:name>TargetIconFile</maml:name>
 <command:parameterValue required="true">String</command:parameterValue>
+</command:parameter>
+<command:parameter required="false" position="named" >
+<maml:name>ValidateOnly</maml:name>
 </command:parameter>
 </command:syntaxItem>
 </command:syntax>
 <command:parameters>
 <command:parameter required="true" position="named" >
-<maml:name>SetupFile</maml:name>
+<maml:name>SourceFile</maml:name>
 <maml:description>
-<maml:para>The executable containing the icons you want to extract.</maml:para>
+<maml:para>An icon (*.ico) or executable (*.exe) containing icons you want to copy or extract.</maml:para>
 </maml:description>
 </command:parameter>
-<command:parameter required="true" position="named" >
+<command:parameter required="false" position="named" >
 <maml:name>TargetIconFile</maml:name>
 <maml:description>
 <maml:para>Specify the target filename. (Directory must exist, if specified a full path with the filename)</maml:para>
+</maml:description>
+</command:parameter>
+<command:parameter required="false" position="named" >
+<maml:name>ValidateOnly</maml:name>
+<maml:description>
+<maml:para>Returns available resolutions within the specified [-SourceFile]. (When using this switch, the [-TargetIconFile] wont&apos;t be saved)</maml:para>
 </maml:description>
 </command:parameter>
 </command:parameters>
@@ -127,7 +136,7 @@
 <command:examples>
 <command:example>
 <maml:title>-------------------------- EXAMPLE 1 --------------------------</maml:title>
-<dev:code>Save-WingetBridgeAppIcon -SetupFile &quot;C:\Windows\Explorer.exe&quot; -TargetIconFile &quot;explorer.ico&quot;</dev:code>
+<dev:code>Save-WingetBridgeAppIcon -SourceFile &quot;C:\Windows\Explorer.exe&quot; -TargetIconFile &quot;explorer.ico&quot;</dev:code>
 </command:example>
 </command:examples>
 <maml:relatedLinks>
@@ -146,7 +155,6 @@
 </command:details>
 <maml:description>
 <maml:para>Downloads a specified package installer
-(Always requires internet connection)
 
 When using this cmdlet you need to confirm that the author of this module is not responsible for, nor does it grant any licenses to, third-party packages.
 Even the author did it&apos;s best to develop a stable build, he provides his work \&quot;as-it-is\&quot; and should not be used in a production environment without testing it.
@@ -163,8 +171,16 @@ To accept the agreement, use this cmdlet together with [-AcceptAgreements]</maml
 <command:parameterValue required="true">Installer</command:parameterValue>
 </command:parameter>
 <command:parameter required="false" position="named" >
+<maml:name>CustomUserAgent</maml:name>
+<command:parameterValue required="true">String</command:parameterValue>
+</command:parameter>
+<command:parameter required="false" position="named" >
 <maml:name>TargetDirectory</maml:name>
 <command:parameterValue required="true">String</command:parameterValue>
+</command:parameter>
+<command:parameter required="false" position="named" >
+<maml:name>Timeout</maml:name>
+<command:parameterValue required="true">Nullable`1</command:parameterValue>
 </command:parameter>
 <command:parameter required="false" position="named" >
 <maml:name>AcceptAgreements</maml:name>
@@ -185,6 +201,12 @@ To accept the agreement, use this cmdlet together with [-AcceptAgreements]</maml
 </maml:description>
 </command:parameter>
 <command:parameter required="false" position="named" >
+<maml:name>CustomUserAgent</maml:name>
+<maml:description>
+<maml:para>Specify a custom User-Agent to be included in the request header. (e.g. &quot;Microsoft-Delivery-Optimization/10.0&quot;)</maml:para>
+</maml:description>
+</command:parameter>
+<command:parameter required="false" position="named" >
 <maml:name>Force</maml:name>
 <maml:description>
 <maml:para>Overwrites existing downloads. (Usually package installers are SHA256 verified, and get downloaded again only on hash mismatch.)</maml:para>
@@ -200,6 +222,12 @@ To accept the agreement, use this cmdlet together with [-AcceptAgreements]</maml
 <maml:name>TargetDirectory</maml:name>
 <maml:description>
 <maml:para>Specify a target Directory (must exist), otherwise the download get saved in the current directory.</maml:para>
+</maml:description>
+</command:parameter>
+<command:parameter required="false" position="named" >
+<maml:name>Timeout</maml:name>
+<maml:description>
+<maml:para>Specify a timeout in seconds. (If not specified, the default value is 60 seconds)</maml:para>
 </maml:description>
 </command:parameter>
 <command:parameter required="false" position="named" >

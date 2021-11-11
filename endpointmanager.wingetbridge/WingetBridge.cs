@@ -25,6 +25,8 @@ namespace endpointmanager.wingetbridge
 {
     class WingetBridge
     {
+        public static readonly string DefaultUserAgent = "wingetbridge/1.2";
+        public static readonly int DefaultTimeout = 60000;
         public static readonly string RootPath = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.CommonApplicationData), typeof(WingetBridge).Namespace);
         public static readonly string DatabasePath = Path.Combine(RootPath, "Database");
         public static readonly string MSIXPath = Path.Combine(DatabasePath, "MSIX");
@@ -426,6 +428,7 @@ namespace endpointmanager.wingetbridge
                     defaultWebProxy.Credentials = CredentialCache.DefaultCredentials;
                     client.Proxy = defaultWebProxy;
                 }
+                client.Headers["User-Agent"] = WingetBridge.DefaultUserAgent;
 
                 var responseString = await client.DownloadStringTaskAsync(new System.Uri(WingetCacheUrl+yamlLink));
 
