@@ -38,12 +38,12 @@ After the module is loaded (see Setup)...
 * Please use e.g. "Get-Help Get-wingetbridge -Examples" to get examples of how to use the corresponding cmdlet.
 
 ### Start-WingetSearch
-Searches packages in the winget-repository without using the winget-cli.
+Search packages in the winget-repository without using the winget-cli.
 #### Example (Start-WingetSearch)
 ```ps
-Start-WingetSearch -SearchByMoniker "vlc" -MaxCacheAge 15
+Start-WingetSearch -SearchByMoniker "vlc"
 ```  
-> Search the winget repository by moniker "vlc"
+> Search the winget repository by moniker "vlc" (the well known mediaplayer)
 
 ### Get-WingetManifest
 Downloads the package manifest (includes package details), and return it as an object
