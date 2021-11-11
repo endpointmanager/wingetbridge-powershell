@@ -10,7 +10,7 @@ I hope that an official powershell module (maintained by Microsoft) will be avai
 * Automatically provide and maintain packages in software deployment tools (like [Microsoft Endpoint Manager Configuration Manager](https://docs.microsoft.com/en-us/mem/configmgr/))
 * Automatically download and update installers into [MDT](https://docs.microsoft.com/en-us/windows/deployment/deploy-windows-mdt/get-started-with-the-microsoft-deployment-toolkit) (Which will be used for [Image Factory](https://deploymentbunny.com/2018/10/19/image-factory-4-0-is-available-for-download/) in my case) 
 
-Meanwhile, I built a powershell module (which is Powershell 5 compatible on purpose) to prepare the required powershell-scripts to automatically maintain packages in Microsoft Endpoint Manager and MDT.
+Meanwhile, I built a powershell (v5-compatible) module to prepare the required powershell-scripts to automatically maintain packages in Microsoft Endpoint Manager and MDT.
 
 ## Known limitations
 
@@ -24,11 +24,11 @@ Currently, there are no plans to implement more features, because I think the of
 I highly recommend not using WingetBridge in a production environment without validating the downloaded installers before you deploy it. (e.g. by validating the certificate of a signed installer)
 
 ## Current Version
-v1.0.0.0
+v1.2.0.0
 
 ## Requirements
 * Windows 10 or Windows 11
-* .NET Framework 4.8 (Powershell 5)
+* .NET Framework 4.8
 * Internet connection
 
 ## Available cmdlets
@@ -88,7 +88,7 @@ Save-WingetBridgeAppIcon -SetupFile "C:\Windows\Explorer.exe" -TargetIconFile "e
 * Make sure you don't have any security-restrictions to load the Powershell-Module. If so, please remove any NTFS Alternate Data Streams (ADS) from the Release-zip before you extract it, and set the ExecutionPolicy to Unrestricted
 
     ```ps
-    Unblock-File .\endpointmanager.wingetbridge_v1.1.0.0.zip
+    Unblock-File .\endpointmanager.wingetbridge_v1.2.0.0.zip
     Set-ExecutionPolicy -ExecutionPolicy Unrestricted
     ```
 
