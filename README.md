@@ -69,12 +69,13 @@ Update-WingetBridgeCache -Force
 > Rebuild the local cache WingetBridge uses.
 
 ### Save-WingetBridgeAppIcon
-Saves the default icon (supports hi-res icons up to 256x256px) that is contained in the specified executable [-SetupFile], to the specified [-TargetIconFile].
+Saves the default icon that is contained in the specified executable [-SourceFile], to the specified [-TargetIconFile].
+When using [-ValidateOnly], only a list of available image resolutions (inside the icon) will be returned by the cmdlet.
 
 ```ps
-Save-WingetBridgeAppIcon -SetupFile "C:\Windows\Explorer.exe" -TargetIconFile "explorer.ico"
+Save-WingetBridgeAppIcon -SourceFile "C:\Windows\Explorer.exe" -TargetIconFile "explorer.ico"
 ```  
-
+> Starting with v1.2.0.0, the cmdlet accepts *.ico Files as the specified SourceFile
 
 ### Setup
 #### Online
