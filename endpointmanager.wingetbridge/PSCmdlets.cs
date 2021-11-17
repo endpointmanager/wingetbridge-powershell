@@ -261,19 +261,26 @@ namespace endpointmanager.wingetbridge
         public SwitchParameter AcceptAgreements
         { get; set; } = false;
 
+        private DateTime _lastTimeProgressWasWritten = DateTime.UtcNow;
+
         protected void ProgressChanged(object sender, DownloadEventArgs e)
         {
-            ProgressRecord myprogress = new ProgressRecord(0, "Download in Progress", "-");
-            myprogress.PercentComplete = e.PercentDone;
-            if (e.TotalFileSize != 0)
-            {
-                myprogress.StatusDescription = e.PercentDone + "% (" + ByteSize.FromBytes(e.TotalFileSize).ToString() + ")";
+            TimeSpan timeSinceProgressWasWrittenLast = DateTime.UtcNow - _lastTimeProgressWasWritten;
+            if (timeSinceProgressWasWrittenLast > TimeSpan.FromMilliseconds(80))
+            {             
+                ProgressRecord myprogress = new ProgressRecord(0, "Download in Progress", "-");
+                myprogress.PercentComplete = e.PercentDone;
+                if (e.TotalFileSize != 0)
+                {
+                    myprogress.StatusDescription = e.PercentDone + "% (" + ByteSize.FromBytes(e.TotalFileSize).ToString() + ")";
+                }
+                else
+                {
+                    myprogress.StatusDescription = e.PercentDone + "%";
+                }
+                WriteProgress(myprogress);
+                _lastTimeProgressWasWritten = DateTime.UtcNow;
             }
-            else
-            {
-                myprogress.StatusDescription = e.PercentDone + "%";
-            }
-            WriteProgress(myprogress);
         }
 
         protected void DownloadedComplete(object sender, EventArgs e)
@@ -370,6 +377,7 @@ namespace endpointmanager.wingetbridge
         public SwitchParameter Force
         { get; set; } = false;
 
+        private DateTime _lastTimeProgressWasWritten = DateTime.UtcNow;
         CancellationTokenSource internalTokenSource = new CancellationTokenSource();
         Timer timer;
         WebClient client = new WebClient();
@@ -443,9 +451,14 @@ namespace endpointmanager.wingetbridge
             {
                 try
                 {
-                    ProgressRecord progress = new ProgressRecord(0, "Gather Winget Repository", e.ProgressPercentage.ToString() + "%");
-                    progress.PercentComplete = e.ProgressPercentage;
-                    WriteProgress(progress);
+                    TimeSpan timeSinceProgressWasWrittenLast = DateTime.UtcNow - _lastTimeProgressWasWritten;
+                    if (timeSinceProgressWasWrittenLast > TimeSpan.FromMilliseconds(80))
+                    {
+                        ProgressRecord progress = new ProgressRecord(0, "Download Winget Repository", e.ProgressPercentage.ToString() + "%");
+                        progress.PercentComplete = e.ProgressPercentage;
+                        WriteProgress(progress);
+                        _lastTimeProgressWasWritten = DateTime.UtcNow;
+                    }
                 }
                 catch { } //Required to prevent "Pipeline closed Exception" on cancellation
             }
