@@ -89,7 +89,7 @@ Save-WingetBridgeAppIcon -SourceFile "C:\Windows\Explorer.exe" -TargetIconFile "
 * Make sure you don't have any security-restrictions to load the Powershell-Module. If so, please remove any NTFS Alternate Data Streams (ADS) from the Release-zip before you extract it, and set the ExecutionPolicy to Unrestricted
 
     ```ps
-    Unblock-File .\endpointmanager.wingetbridge_v1.2.0.0.zip
+    Unblock-File .\endpointmanager.wingetbridge_v1.2.0.2.zip
     Set-ExecutionPolicy -ExecutionPolicy Unrestricted
     ```
 
