@@ -15,7 +15,7 @@ Meanwhile, I built a powershell (v5-compatible) module to prepare the required p
 ## Known limitations
 
 * Only the public winget repository can be searched (There is no implementation to search private repositories or msstore at the moment)
-* No software installation through wingetbridge-module
+* No software installations through wingetbridge-cmdlets (requires additional scripts or software deployment tools like MEMCM or Microsoft Intune)
 
 Currently, there are no plans to implement more features, because I think the official powershell support for [winget-cli](https://github.com/microsoft/winget-cli) will be available soon.
 
@@ -24,7 +24,7 @@ Currently, there are no plans to implement more features, because I think the of
 I highly recommend not using WingetBridge in a production environment without validating the downloaded installers before you deploy it. (e.g. by validating the certificate of a signed installer)
 
 ## Current Version
-v1.2.0.0
+v1.2.0.2
 
 ## Requirements
 * Windows 10 or Windows 11
