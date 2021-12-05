@@ -15,7 +15,7 @@ Meanwhile, I built a powershell (v5-compatible) module to prepare the required p
 ## Known limitations
 
 * Only the public winget repository can be searched (There is no implementation to search private repositories or msstore at the moment)
-* No software installations through wingetbridge-cmdlets (requires additional scripts or software deployment tools like MEMCM or Microsoft Intune)
+* No software installations through wingetbridge-cmdlets (requires additional scripts, see "Examples")
 
 Currently, there are no plans to implement more features, because I think the official powershell support for [winget-cli](https://github.com/microsoft/winget-cli) will be available soon.
 
@@ -77,13 +77,32 @@ Save-WingetBridgeAppIcon -SourceFile "C:\Windows\Explorer.exe" -TargetIconFile "
 ```  
 > Starting with v1.2.0.0, the cmdlet accepts *.ico-files specified with [-SourceFile]
 
-### Setup
-#### Online
+## Examples
+#### How to silently install a localized version of the latest version of "Acrobat Reader"?
+```ps
+$AvailableInstallers = (Start-WingetSearch -SearchById Adobe.Acrobat.Reader.64-bit | Get-WingetManifest).Installers
+foreach ($installer in $AvailableInstallers)
+{
+    if (($installer.InstallerLocale -eq "de-DE") -and ($installer.Architecture -eq "x64"))
+    {
+        $DownloadedSetup = Start-WingetInstallerDownload -TargetDirectory C:\Downloads\ -AcceptAgreements -PackageInstaller $installer
+        Start-Process -FilePath "$($DownloadedSetup.FullPath)" -ArgumentList $($installer.InstallerSwitches.Silent -split " ")
+    }
+}
+```
+> (Please modify "InstallerLocale" and "TargetDirectory" to your needs)  
+> This sample requires WingetBridge (Powershell-Module) v1.3.0.0 (or higher)
+
+#### How to synchronize packages from winget repository with MEMCM (ConfigMgr)?
+Please take a look on this powershell script: [WingetBridge-Factory](https://github.com/endpointmanager/wingetbridge-factory)  
+
+## Setup
+### Online
 * The **wingetbridge-PowerShell module** is now listed on **PowerShell Gallery**, therefore it can be installed with:  
     ```ps
     Install-Module endpointmanager.wingetbridge
     ```
-#### Offline
+### Offline
 * Extract the folder (endpointmanager.wingetbridge) from the Release-zip to %ProgramFiles%\WindowsPowerShell\Modules\
 * OR use "**Import**-Module .\endpointmanager.wingetbridge\endpointmanager.wingetbridge.**psd1**" from the root directory of the extracted Release-zip
 * Make sure you don't have any security-restrictions to load the Powershell-Module. If so, please remove any NTFS Alternate Data Streams (ADS) from the Release-zip before you extract it, and set the ExecutionPolicy to Unrestricted
