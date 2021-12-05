@@ -24,7 +24,7 @@ Currently, there are no plans to implement more features, because I think the of
 I highly recommend not using WingetBridge in a production environment without validating the downloaded installers before you deploy it. (e.g. by validating the certificate of a signed installer)
 
 ## Current Version
-v1.2.0.2
+v1.3.0.0
 
 ## Requirements
 * Windows 10 or Windows 11
@@ -89,7 +89,7 @@ Save-WingetBridgeAppIcon -SourceFile "C:\Windows\Explorer.exe" -TargetIconFile "
 * Make sure you don't have any security-restrictions to load the Powershell-Module. If so, please remove any NTFS Alternate Data Streams (ADS) from the Release-zip before you extract it, and set the ExecutionPolicy to Unrestricted
 
     ```ps
-    Unblock-File .\endpointmanager.wingetbridge_v1.2.0.2.zip
+    Unblock-File .\endpointmanager.wingetbridge_v1.3.0.0.zip
     Set-ExecutionPolicy -ExecutionPolicy Unrestricted
     ```
 
