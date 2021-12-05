@@ -21,11 +21,11 @@ namespace endpointmanager.wingetbridge
         public string Publisher { get; set; }
         public string PublisherUrl { get; set; }
         public string PublisherSupportUrl { get; set; }
-        public string License { get; set; }
         public string Copyright { get; set; }
         public string CopyrightUrl { get; set; }
         public string Description { get; set; }
         public string ShortDescription { get; set; }
+        public string License { get; set; }
         public string LicenseUrl { get; set; }
         public string PrivacyUrl { get; set; }
         public string PackageUrl { get; set; }
@@ -38,6 +38,7 @@ namespace endpointmanager.wingetbridge
         public string Scope { get; set; } //... for all installers within the package
         public string UpgradeBehavior { get; set; }
         public Dependencies Dependencies { get; set; } //... for all installers within the package
+        public InstallerSwitches InstallerSwitches { get; set; }  //... for all installers within the package
         public List<String> InstallModes { get; set; }
         public List<String> FileExtensions { get; set; }
         public List<String> Tags { get; set; }

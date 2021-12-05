@@ -25,7 +25,7 @@ namespace endpointmanager.wingetbridge
 {
     class WingetBridge
     {
-        public static readonly string DefaultUserAgent = "wingetbridge/1.2";
+        public static readonly string DefaultUserAgent = "wingetbridge/1.3";
         public static readonly int DefaultTimeout = 60000;
         public static readonly string RootPath = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.CommonApplicationData), typeof(WingetBridge).Namespace);
         public static readonly string DatabasePath = Path.Combine(RootPath, "Database");
@@ -441,6 +441,17 @@ namespace endpointmanager.wingetbridge
                     var result = deserializer.Deserialize<YamlManifest>(responseString);
                     if (result != null)
                     {
+                        if (result.Installers != null)
+                        {
+                            foreach (var installer in result.Installers) //Expand installer-variables
+                            {
+                                if (installer.Scope == null) { installer.Scope = result.Scope; }
+                                if (installer.InstallerLocale == null) { installer.InstallerLocale = result.InstallerLocale; }
+                                if (installer.InstallerType == null) { installer.InstallerType = result.InstallerType; }
+                                if (installer.Dependencies == null) { installer.Dependencies = result.Dependencies; }
+                                if (installer.InstallerSwitches == null) { installer.InstallerSwitches = result.InstallerSwitches; }
+                            }
+                        }
                         return result;
                     }
                 }
